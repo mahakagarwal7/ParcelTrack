@@ -3,6 +3,8 @@ import { Authorization } from '../models/Authorization.js';
 import { User } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
 import * as policyService from './policyService.js';
+import * as activityLogService from './activityLogService.js';
+import * as notificationService from './notificationService.js';
 import { AUTHORIZATION_STATUS, DELIVERY_ATTEMPT_STATUS } from '../utils/stateMachine.js';
 
 export async function searchStudents(guardUser, queryStr) {
@@ -98,6 +100,25 @@ export async function createDeliveryAttempt(guardUser, attemptData) {
   // Link back
   authorization.deliveryAttemptId = deliveryAttempt._id;
   await authorization.save();
+
+  // Audit Log & Notification to Student
+  await activityLogService.logActivity({
+    actorId: guardUser._id,
+    actorRole: guardUser.role,
+    hostelId: guardUser.hostelId,
+    deliveryAttemptId: deliveryAttempt._id,
+    authorizationId: authorization._id,
+    action: 'DELIVERY_ATTEMPT_CREATED',
+    newValue: { status: deliveryAttempt.status, courierName, trackingNumber },
+  });
+
+  await notificationService.sendNotification({
+    recipientId: student._id,
+    title: 'Courier Arrival at Hostel Gate',
+    message: `${courierName} courier is at the hostel gate with a parcel for you. Please approve or reject reception.`,
+    type: 'CONSENT_REQUEST',
+    relatedAuthorizationId: authorization._id,
+  });
 
   return { deliveryAttempt, authorization, policyResult };
 }

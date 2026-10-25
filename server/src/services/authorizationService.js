@@ -1,7 +1,10 @@
 import { Authorization } from '../models/Authorization.js';
 import { Parcel } from '../models/Parcel.js';
 import { DeliveryAttempt } from '../models/DeliveryAttempt.js';
+import { User } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
+import * as activityLogService from './activityLogService.js';
+import * as notificationService from './notificationService.js';
 import {
   AUTHORIZATION_STATUS,
   PARCEL_STATUS,
@@ -78,6 +81,8 @@ export async function processStudentDecision(authId, studentUser, decision) {
     throw ApiError.forbidden('You can only authorize deliveries designated for you');
   }
 
+  const previousStatus = auth.status;
+
   if (decision === 'GRANT') {
     if (auth.wardenDecision === 'APPROVED' || auth.wardenDecision === 'NOT_REQUIRED') {
       validateAuthTransition(auth.status, AUTHORIZATION_STATUS.AUTHORIZED);
@@ -130,6 +135,19 @@ export async function processStudentDecision(authId, studentUser, decision) {
     }
   }
 
+  // Audit Log
+  await activityLogService.logActivity({
+    actorId: studentUser._id,
+    actorRole: studentUser.role,
+    hostelId: studentUser.hostelId,
+    authorizationId: auth._id,
+    parcelId: auth.parcelId,
+    deliveryAttemptId: auth.deliveryAttemptId,
+    action: decision === 'GRANT' ? 'CONSENT_GRANTED' : 'CONSENT_REJECTED',
+    previousValue: { status: previousStatus },
+    newValue: { status: auth.status, studentConsent: auth.studentConsent },
+  });
+
   return auth;
 }
 
@@ -149,6 +167,8 @@ export async function processWardenDecision(authId, wardenUser, decision, commen
       `Cannot review authorization in status '${auth.status}'. Only PENDING_WARDEN requests can be reviewed.`
     );
   }
+
+  const previousStatus = auth.status;
 
   if (decision === 'APPROVE') {
     validateAuthTransition(auth.status, AUTHORIZATION_STATUS.AUTHORIZED);
@@ -200,6 +220,28 @@ export async function processWardenDecision(authId, wardenUser, decision, commen
       await attempt.save();
     }
   }
+
+  // Audit Log & Notification
+  await activityLogService.logActivity({
+    actorId: wardenUser._id,
+    actorRole: wardenUser.role,
+    hostelId: wardenUser.hostelId,
+    authorizationId: auth._id,
+    parcelId: auth.parcelId,
+    deliveryAttemptId: auth.deliveryAttemptId,
+    action: decision === 'APPROVE' ? 'WARDEN_APPROVED' : 'WARDEN_REJECTED',
+    previousValue: { status: previousStatus },
+    newValue: { status: auth.status, wardenDecision: auth.wardenDecision, comments },
+  });
+
+  await notificationService.sendNotification({
+    recipientId: auth.studentId,
+    title: `Warden Decision: ${decision === 'APPROVE' ? 'Approved' : 'Rejected'}`,
+    message: `The hostel warden has ${decision.toLowerCase()}d authorization for your parcel. Comments: ${comments || 'None'}`,
+    type: decision === 'APPROVE' ? 'PARCEL_EXPECTED' : 'CONSENT_REQUEST',
+    relatedAuthorizationId: auth._id,
+    relatedParcelId: auth.parcelId,
+  });
 
   return auth;
 }

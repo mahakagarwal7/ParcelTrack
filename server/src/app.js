@@ -9,6 +9,8 @@ import policyRoutes from './routes/policyRoutes.js';
 import parcelRoutes from './routes/parcelRoutes.js';
 import authorizationRoutes from './routes/authorizationRoutes.js';
 import deliveryAttemptRoutes from './routes/deliveryAttemptRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import activityLogRoutes from './routes/activityLogRoutes.js';
 
 const app = express();
 
@@ -48,6 +50,8 @@ app.use('/api/hostel', policyRoutes);
 app.use('/api/parcels', parcelRoutes);
 app.use('/api/authorizations', authorizationRoutes);
 app.use('/api/delivery-attempts', deliveryAttemptRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/activity-logs', activityLogRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {

@@ -3,6 +3,8 @@ import { Otp } from '../models/Otp.js';
 import { Parcel } from '../models/Parcel.js';
 import { ApiError } from '../utils/ApiError.js';
 import { config } from '../config/env.js';
+import * as activityLogService from './activityLogService.js';
+import * as notificationService from './notificationService.js';
 import { PARCEL_STATUS } from '../utils/stateMachine.js';
 
 export function hashOtp(otp, salt) {
@@ -68,6 +70,24 @@ export async function generateCollectionOtp(parcelId, studentUser) {
     maxAttempts,
     expiresAt,
     isUsed: false,
+  });
+
+  // Audit log & Notification
+  await activityLogService.logActivity({
+    actorId: studentUser._id,
+    actorRole: studentUser.role,
+    hostelId: studentUser.hostelId,
+    parcelId: parcel._id,
+    action: 'OTP_GENERATED',
+    metadata: { expiresInMinutes: expiryMinutes },
+  });
+
+  await notificationService.sendNotification({
+    recipientId: studentUser._id,
+    title: 'Collection OTP Generated',
+    message: `Your single-use collection OTP for parcel ${parcel.parcelId} is generated. Valid for ${expiryMinutes} minutes.`,
+    type: 'COLLECTION_OTP',
+    relatedParcelId: parcel._id,
   });
 
   // Plaintext OTP is returned ONLY in this response
@@ -196,6 +216,26 @@ export async function verifyOtpAndHandover(parcelId, candidateOtp, guardUser) {
   activeOtp.usedAt = new Date();
   activeOtp.usedBy = guardUser._id;
   await activeOtp.save();
+
+  // Audit Log & Notification
+  await activityLogService.logActivity({
+    actorId: guardUser._id,
+    actorRole: guardUser.role,
+    hostelId: guardUser.hostelId,
+    parcelId: parcel._id,
+    action: 'PARCEL_HANDOVER',
+    previousValue: { status: PARCEL_STATUS.RECEIVED },
+    newValue: { status: PARCEL_STATUS.COLLECTED, collectedAt: updatedParcel.collectedAt },
+    metadata: { studentId: parcel.studentId.toString(), guardName: guardUser.name },
+  });
+
+  await notificationService.sendNotification({
+    recipientId: parcel.studentId,
+    title: 'Parcel Collected Successfully',
+    message: `Your parcel ${updatedParcel.parcelId} from ${updatedParcel.courierName} has been handed over by Guard ${guardUser.name}.`,
+    type: 'PARCEL_COLLECTED',
+    relatedParcelId: updatedParcel._id,
+  });
 
   return {
     parcel: updatedParcel,

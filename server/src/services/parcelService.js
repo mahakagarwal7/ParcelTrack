@@ -6,6 +6,8 @@ import { User } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
 import * as policyService from './policyService.js';
 import * as authorizationService from './authorizationService.js';
+import * as activityLogService from './activityLogService.js';
+import * as notificationService from './notificationService.js';
 import {
   PARCEL_STATUS,
   AUTHORIZATION_STATUS,
@@ -91,6 +93,27 @@ export async function registerExpectedParcel(studentUser, parcelInput) {
   // Link parcel to authorization
   authorization.parcelId = parcel._id;
   await authorization.save();
+
+  // Audit Log & Notification
+  await activityLogService.logActivity({
+    actorId: studentUser._id,
+    actorRole: studentUser.role,
+    hostelId: studentUser.hostelId,
+    parcelId: parcel._id,
+    authorizationId: authorization._id,
+    action: 'PARCEL_REGISTERED',
+    newValue: { status: initialParcelStatus, courierName, trackingNumber },
+    metadata: { isHighValue, isOversized, isCOD },
+  });
+
+  await notificationService.sendNotification({
+    recipientId: studentUser._id,
+    title: 'Expected Parcel Registered',
+    message: `Your expected parcel from ${courierName} (ID: ${parcelId}) is registered. Status: ${initialParcelStatus}`,
+    type: 'PARCEL_EXPECTED',
+    relatedParcelId: parcel._id,
+    relatedAuthorizationId: authorization._id,
+  });
 
   return { parcel, authorization, policyResult };
 }
@@ -181,6 +204,8 @@ export async function receiveExpectedParcel(parcelId, guardUser, { storageLocati
     );
   }
 
+  const previousStatus = parcel.status;
+
   // Enforce legal state transition
   validateParcelTransition(parcel.status, PARCEL_STATUS.RECEIVED);
 
@@ -197,6 +222,27 @@ export async function receiveExpectedParcel(parcelId, guardUser, { storageLocati
   });
 
   await parcel.save();
+
+  // Audit Log & Notification
+  await activityLogService.logActivity({
+    actorId: guardUser._id,
+    actorRole: guardUser.role,
+    hostelId: guardUser.hostelId,
+    parcelId: parcel._id,
+    authorizationId: parcel.authorizationId._id,
+    action: 'PARCEL_RECEIVED',
+    previousValue: { status: previousStatus },
+    newValue: { status: PARCEL_STATUS.RECEIVED, storageLocation: parcel.storageLocation },
+    metadata: { remarks },
+  });
+
+  await notificationService.sendNotification({
+    recipientId: parcel.studentId,
+    title: 'Parcel Received at Gate Counter',
+    message: `Your parcel from ${parcel.courierName} has arrived and is stored at ${parcel.storageLocation}. Generate your OTP to collect it.`,
+    type: 'PARCEL_RECEIVED',
+    relatedParcelId: parcel._id,
+  });
 
   return parcel;
 }
@@ -260,6 +306,27 @@ export async function receiveUnexpectedParcel(attemptId, guardUser, { storageLoc
   // Mark attempt accepted
   attempt.status = DELIVERY_ATTEMPT_STATUS.ACCEPTED;
   await attempt.save();
+
+  // Audit Log & Notification
+  await activityLogService.logActivity({
+    actorId: guardUser._id,
+    actorRole: guardUser.role,
+    hostelId: guardUser.hostelId,
+    parcelId: parcel._id,
+    deliveryAttemptId: attempt._id,
+    authorizationId: attempt.authorizationId._id,
+    action: 'PARCEL_RECEIVED',
+    newValue: { status: PARCEL_STATUS.RECEIVED, storageLocation: parcel.storageLocation },
+    metadata: { remarks },
+  });
+
+  await notificationService.sendNotification({
+    recipientId: attempt.studentId,
+    title: 'Parcel Received at Gate Counter',
+    message: `Your courier package from ${parcel.courierName} has been received and stored at ${parcel.storageLocation}. Generate your OTP to collect it.`,
+    type: 'PARCEL_RECEIVED',
+    relatedParcelId: parcel._id,
+  });
 
   return { parcel, deliveryAttempt: attempt };
 }

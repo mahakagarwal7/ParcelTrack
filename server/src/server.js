@@ -2,8 +2,12 @@ import http from 'http';
 import app from './app.js';
 import { connectDB, disconnectDB } from './config/db.js';
 import { config } from './config/env.js';
+import { initSocketServer } from './sockets/socketServer.js';
 
 const server = http.createServer(app);
+
+// Initialize Socket.IO engine
+initSocketServer(server);
 
 async function startServer() {
   try {
@@ -18,7 +22,7 @@ async function startServer() {
   }
 }
 
-
+// Graceful shutdown handling
 const shutdown = async (signal) => {
   console.log(`\nReceived ${signal}. Shutting down gracefully...`);
   server.close(async () => {
