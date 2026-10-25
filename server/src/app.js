@@ -5,6 +5,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { ApiError } from './utils/ApiError.js';
 import { config } from './config/env.js';
 import authRoutes from './routes/authRoutes.js';
+import policyRoutes from './routes/policyRoutes.js';
 
 const app = express();
 
@@ -38,8 +39,9 @@ app.get('/', (req, res) => {
   });
 });
 
-// Authentication Routes
+// API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/hostel', policyRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {
