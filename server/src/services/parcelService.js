@@ -1,10 +1,17 @@
 import crypto from 'crypto';
 import { Parcel } from '../models/Parcel.js';
 import { Authorization } from '../models/Authorization.js';
+import { DeliveryAttempt } from '../models/DeliveryAttempt.js';
+import { User } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
 import * as policyService from './policyService.js';
 import * as authorizationService from './authorizationService.js';
-import { PARCEL_STATUS, AUTHORIZATION_STATUS } from '../utils/stateMachine.js';
+import {
+  PARCEL_STATUS,
+  AUTHORIZATION_STATUS,
+  DELIVERY_ATTEMPT_STATUS,
+  validateParcelTransition,
+} from '../utils/stateMachine.js';
 
 export function generateParcelId() {
   const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -151,4 +158,208 @@ export async function getParcelById(idOrParcelId, requestingUser) {
   }
 
   return parcel;
+}
+
+export async function receiveExpectedParcel(parcelId, guardUser, { storageLocation, remarks }) {
+  const isObjectId = /^[0-9a-fA-F]{24}$/.test(parcelId);
+  const filter = isObjectId ? { _id: parcelId } : { parcelId: parcelId.toUpperCase() };
+
+  const parcel = await Parcel.findOne(filter).populate('authorizationId');
+  if (!parcel) {
+    throw ApiError.notFound('Parcel not found');
+  }
+
+  // Hostel boundary check
+  if (guardUser.role !== 'ADMIN' && parcel.hostelId !== guardUser.hostelId) {
+    throw ApiError.forbidden('You cannot accept parcels for another hostel');
+  }
+
+  // Invariant: Never accept a parcel without valid authorization
+  if (!parcel.authorizationId || parcel.authorizationId.status !== AUTHORIZATION_STATUS.AUTHORIZED) {
+    throw ApiError.badRequest(
+      `Cannot accept parcel: Authorization is in status '${parcel.authorizationId?.status || 'UNKNOWN'}'. Must be AUTHORIZED.`
+    );
+  }
+
+  // Enforce legal state transition
+  validateParcelTransition(parcel.status, PARCEL_STATUS.RECEIVED);
+
+  parcel.status = PARCEL_STATUS.RECEIVED;
+  parcel.receivedBy = guardUser._id;
+  parcel.receivedAt = new Date();
+  parcel.storageLocation = storageLocation || 'Gate Reception Counter';
+
+  parcel.statusHistory.push({
+    status: PARCEL_STATUS.RECEIVED,
+    changedBy: guardUser._id,
+    note: remarks || `Physical receipt recorded by Guard ${guardUser.name} at ${parcel.storageLocation}`,
+    timestamp: new Date(),
+  });
+
+  await parcel.save();
+
+  return parcel;
+}
+
+export async function receiveUnexpectedParcel(attemptId, guardUser, { storageLocation, remarks }) {
+  const attempt = await DeliveryAttempt.findById(attemptId).populate('authorizationId');
+  if (!attempt) {
+    throw ApiError.notFound('Delivery attempt not found');
+  }
+
+  // Hostel boundary check
+  if (guardUser.role !== 'ADMIN' && attempt.hostelId !== guardUser.hostelId) {
+    throw ApiError.forbidden('You cannot accept deliveries for another hostel');
+  }
+
+  // Invariant: Guard accepts only after authorization passes
+  if (
+    !attempt.authorizationId ||
+    attempt.authorizationId.status !== AUTHORIZATION_STATUS.AUTHORIZED
+  ) {
+    throw ApiError.badRequest(
+      `Cannot accept courier parcel: Delivery attempt is in status '${attempt.status}' and authorization is '${attempt.authorizationId?.status || 'UNKNOWN'}'. It must be AUTHORIZED.`
+    );
+  }
+
+  // Prevent duplicate parcel generation for same attempt
+  if (attempt.authorizationId.parcelId) {
+    const existing = await Parcel.findById(attempt.authorizationId.parcelId);
+    if (existing) {
+      throw ApiError.conflict(`Parcel ${existing.parcelId} has already been received for this delivery attempt.`);
+    }
+  }
+
+  const newParcelId = generateParcelId();
+
+  const parcel = await Parcel.create({
+    parcelId: newParcelId,
+    studentId: attempt.studentId,
+    hostelId: attempt.hostelId,
+    courierName: attempt.courierName,
+    trackingNumber: attempt.trackingNumber || null,
+    status: PARCEL_STATUS.RECEIVED,
+    authorizationId: attempt.authorizationId._id,
+    receivedBy: guardUser._id,
+    receivedAt: new Date(),
+    storageLocation: storageLocation || 'Gate Reception Counter',
+    statusHistory: [
+      {
+        status: PARCEL_STATUS.RECEIVED,
+        changedBy: guardUser._id,
+        note: remarks || `Physical receipt recorded by Guard ${guardUser.name} at ${storageLocation || 'Gate Reception'}`,
+        timestamp: new Date(),
+      },
+    ],
+  });
+
+  // Link parcel back to authorization
+  attempt.authorizationId.parcelId = parcel._id;
+  await attempt.authorizationId.save();
+
+  // Mark attempt accepted
+  attempt.status = DELIVERY_ATTEMPT_STATUS.ACCEPTED;
+  await attempt.save();
+
+  return { parcel, deliveryAttempt: attempt };
+}
+
+export async function getGuardActiveParcels(guardUser, { search, page = 1, limit = 20 }) {
+  const query = {
+    status: PARCEL_STATUS.RECEIVED, // Awaiting collection
+  };
+
+  if (guardUser.role !== 'ADMIN') {
+    query.hostelId = guardUser.hostelId;
+  }
+
+  if (search) {
+    query.$or = [
+      { parcelId: { $regex: search, $options: 'i' } },
+      { trackingNumber: { $regex: search, $options: 'i' } },
+      { courierName: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  const pageNum = parseInt(page, 10) || 1;
+  const limitNum = parseInt(limit, 10) || 20;
+  const skip = (pageNum - 1) * limitNum;
+
+  const total = await Parcel.countDocuments(query);
+  const parcels = await Parcel.find(query)
+    .populate('studentId', 'name email roomNumber studentId phone')
+    .populate('receivedBy', 'name role')
+    .sort({ receivedAt: -1 })
+    .skip(skip)
+    .limit(limitNum);
+
+  return {
+    parcels,
+    pagination: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      pages: Math.ceil(total / limitNum),
+    },
+  };
+}
+
+export async function lookupGateAuthorization(guardUser, { trackingNumber, studentId }) {
+  const query = {};
+
+  if (guardUser.role !== 'ADMIN') {
+    query.hostelId = guardUser.hostelId;
+  }
+
+  if (trackingNumber) {
+    // Check in parcels
+    const matchingParcels = await Parcel.find({
+      ...query,
+      trackingNumber: { $regex: trackingNumber.trim(), $options: 'i' },
+    })
+      .populate('studentId', 'name roomNumber studentId phone')
+      .populate('authorizationId');
+
+    // Check in delivery attempts
+    const matchingAttempts = await DeliveryAttempt.find({
+      ...query,
+      trackingNumber: { $regex: trackingNumber.trim(), $options: 'i' },
+    })
+      .populate('studentId', 'name roomNumber studentId phone')
+      .populate('authorizationId');
+
+    return {
+      parcels: matchingParcels,
+      deliveryAttempts: matchingAttempts,
+    };
+  }
+
+  if (studentId) {
+    const student = await User.findOne({
+      studentId: studentId.trim(),
+      ...(guardUser.role !== 'ADMIN' && { hostelId: guardUser.hostelId }),
+    });
+
+    if (!student) {
+      return { parcels: [], deliveryAttempts: [] };
+    }
+
+    const parcels = await Parcel.find({
+      studentId: student._id,
+      status: { $in: [PARCEL_STATUS.EXPECTED, PARCEL_STATUS.AUTHORIZED] },
+    }).populate('authorizationId');
+
+    const attempts = await DeliveryAttempt.find({
+      studentId: student._id,
+      status: DELIVERY_ATTEMPT_STATUS.AWAITING_AUTHORIZATION,
+    }).populate('authorizationId');
+
+    return {
+      student,
+      parcels,
+      deliveryAttempts: attempts,
+    };
+  }
+
+  throw ApiError.badRequest('Provide trackingNumber or studentId for gate lookup');
 }

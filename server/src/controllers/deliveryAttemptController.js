@@ -1,4 +1,5 @@
 import * as deliveryAttemptService from '../services/deliveryAttemptService.js';
+import * as parcelService from '../services/parcelService.js';
 
 export async function searchStudents(req, res, next) {
   try {
@@ -54,6 +55,24 @@ export async function getAttempt(req, res, next) {
     res.status(200).json({
       success: true,
       deliveryAttempt: attempt,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function receiveUnexpectedDelivery(req, res, next) {
+  try {
+    const { storageLocation, remarks } = req.body;
+    const result = await parcelService.receiveUnexpectedParcel(req.params.id, req.user, {
+      storageLocation,
+      remarks,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Courier parcel received at gate and assigned ID: ${result.parcel.parcelId}`,
+      ...result,
     });
   } catch (error) {
     next(error);
