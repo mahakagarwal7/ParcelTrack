@@ -4,6 +4,7 @@ import {
   createAttempt,
   getAttempts,
   getAttempt,
+  receiveUnexpectedDelivery,
 } from '../controllers/deliveryAttemptController.js';
 import { protect } from '../middleware/auth.js';
 import { authorize } from '../middleware/role.js';
@@ -17,6 +18,9 @@ router.get('/students/search', authorize('GUARD', 'WARDEN', 'ADMIN'), searchStud
 
 // Guard registers unexpected delivery attempt at the gate
 router.post('/', authorize('GUARD', 'ADMIN'), createAttempt);
+
+// Guard physically accepts and receives an authorized unexpected delivery
+router.post('/:id/receive', authorize('GUARD', 'ADMIN'), receiveUnexpectedDelivery);
 
 // Get delivery attempts (filtered by role and hostel)
 router.get('/', getAttempts);
