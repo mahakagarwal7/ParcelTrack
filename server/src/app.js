@@ -6,6 +6,8 @@ import { ApiError } from './utils/ApiError.js';
 import { config } from './config/env.js';
 import authRoutes from './routes/authRoutes.js';
 import policyRoutes from './routes/policyRoutes.js';
+import parcelRoutes from './routes/parcelRoutes.js';
+import authorizationRoutes from './routes/authorizationRoutes.js';
 
 const app = express();
 
@@ -42,6 +44,8 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/hostel', policyRoutes);
+app.use('/api/parcels', parcelRoutes);
+app.use('/api/authorizations', authorizationRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {
