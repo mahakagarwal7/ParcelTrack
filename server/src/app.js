@@ -11,6 +11,7 @@ import authorizationRoutes from './routes/authorizationRoutes.js';
 import deliveryAttemptRoutes from './routes/deliveryAttemptRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import activityLogRoutes from './routes/activityLogRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use('/api/authorizations', authorizationRoutes);
 app.use('/api/delivery-attempts', deliveryAttemptRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/activity-logs', activityLogRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {
