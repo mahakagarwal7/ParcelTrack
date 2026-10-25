@@ -1,9 +1,11 @@
 import { Authorization } from '../models/Authorization.js';
 import { Parcel } from '../models/Parcel.js';
+import { DeliveryAttempt } from '../models/DeliveryAttempt.js';
 import { ApiError } from '../utils/ApiError.js';
 import {
   AUTHORIZATION_STATUS,
   PARCEL_STATUS,
+  DELIVERY_ATTEMPT_STATUS,
   validateAuthTransition,
   validateParcelTransition,
 } from '../utils/stateMachine.js';
@@ -56,7 +58,8 @@ export async function getAuthorizationById(authId) {
   const auth = await Authorization.findById(authId)
     .populate('studentId', 'name email roomNumber studentId')
     .populate('wardenId', 'name email role')
-    .populate('parcelId');
+    .populate('parcelId')
+    .populate('deliveryAttemptId');
 
   if (!auth) {
     throw ApiError.notFound('Authorization record not found');
@@ -76,16 +79,16 @@ export async function processStudentDecision(authId, studentUser, decision) {
   }
 
   if (decision === 'GRANT') {
-    validateAuthTransition(auth.status, AUTHORIZATION_STATUS.PENDING_WARDEN);
+    if (auth.wardenDecision === 'APPROVED' || auth.wardenDecision === 'NOT_REQUIRED') {
+      validateAuthTransition(auth.status, AUTHORIZATION_STATUS.AUTHORIZED);
+      auth.status = AUTHORIZATION_STATUS.AUTHORIZED;
+    } else {
+      validateAuthTransition(auth.status, AUTHORIZATION_STATUS.PENDING_WARDEN);
+      auth.status = AUTHORIZATION_STATUS.PENDING_WARDEN;
+    }
 
     auth.studentConsent = 'GRANTED';
     auth.studentConsentAt = new Date();
-
-    if (auth.wardenDecision === 'APPROVED' || auth.wardenDecision === 'NOT_REQUIRED') {
-      auth.status = AUTHORIZATION_STATUS.AUTHORIZED;
-    } else {
-      auth.status = AUTHORIZATION_STATUS.PENDING_WARDEN;
-    }
   } else if (decision === 'REJECT') {
     validateAuthTransition(auth.status, AUTHORIZATION_STATUS.REJECTED);
     auth.studentConsent = 'REVOKED';
@@ -110,6 +113,20 @@ export async function processStudentDecision(authId, studentUser, decision) {
         });
         await parcel.save();
       }
+    }
+  }
+
+  // If linked to a DeliveryAttempt, sync delivery attempt status
+  if (auth.deliveryAttemptId) {
+    const attempt = await DeliveryAttempt.findById(auth.deliveryAttemptId);
+    if (attempt) {
+      if (auth.status === AUTHORIZATION_STATUS.AUTHORIZED) {
+        attempt.status = DELIVERY_ATTEMPT_STATUS.ACCEPTED;
+      } else if (auth.status === AUTHORIZATION_STATUS.REJECTED) {
+        attempt.status = DELIVERY_ATTEMPT_STATUS.DENIED;
+        attempt.failureReason = 'Delivery rejected by recipient student';
+      }
+      await attempt.save();
     }
   }
 
@@ -167,6 +184,20 @@ export async function processWardenDecision(authId, wardenUser, decision, commen
         });
         await parcel.save();
       }
+    }
+  }
+
+  // Sync linked delivery attempt if applicable
+  if (auth.deliveryAttemptId) {
+    const attempt = await DeliveryAttempt.findById(auth.deliveryAttemptId);
+    if (attempt) {
+      if (auth.status === AUTHORIZATION_STATUS.AUTHORIZED) {
+        attempt.status = DELIVERY_ATTEMPT_STATUS.ACCEPTED;
+      } else if (auth.status === AUTHORIZATION_STATUS.REJECTED) {
+        attempt.status = DELIVERY_ATTEMPT_STATUS.DENIED;
+        attempt.failureReason = `Delivery rejected by warden: ${comments || 'No remarks'}`;
+      }
+      await attempt.save();
     }
   }
 
