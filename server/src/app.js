@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import { errorHandler } from './middleware/errorHandler.js';
 import { ApiError } from './utils/ApiError.js';
 import { config } from './config/env.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
@@ -36,6 +37,9 @@ app.get('/', (req, res) => {
     docs: '/api/health',
   });
 });
+
+// Authentication Routes
+app.use('/api/auth', authRoutes);
 
 // 404 Route Handler
 app.use((req, res, next) => {
