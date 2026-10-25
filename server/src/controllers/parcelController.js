@@ -1,4 +1,5 @@
 import * as parcelService from '../services/parcelService.js';
+import * as otpService from '../services/otpService.js';
 
 export async function registerParcel(req, res, next) {
   try {
@@ -92,6 +93,35 @@ export async function lookupGateAuthorization(req, res, next) {
 
     res.status(200).json({
       success: true,
+      ...result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function requestCollectionOtp(req, res, next) {
+  try {
+    const otpData = await otpService.generateCollectionOtp(req.params.id, req.user);
+
+    res.status(200).json({
+      success: true,
+      message: 'Secure collection OTP generated. Present this OTP to the hostel guard.',
+      ...otpData,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function verifyOtpAndCollect(req, res, next) {
+  try {
+    const { otp } = req.body;
+    const result = await otpService.verifyOtpAndHandover(req.params.id, otp, req.user);
+
+    res.status(200).json({
+      success: true,
+      message: `Parcel ${result.parcel.parcelId} securely handed over and collected.`,
       ...result,
     });
   } catch (error) {
