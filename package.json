@@ -1,0 +1,25 @@
+{
+  "name": "parceltrack",
+  "version": "1.0.0",
+  "description": "Hostel Parcel Reception and Secure Handover System (MERN)",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "start": "npm --prefix server start",
+    "build": "npm --prefix client run build",
+    "seed": "npm --prefix server run seed",
+    "test": "npm --prefix server test"
+  },
+  "keywords": [
+    "parceltrack",
+    "mern",
+    "hostel-management",
+    "package-tracking",
+    "otp-verification",
+    "socket-io"
+  ],
+  "author": "Mahak Agarwal",
+  "license": "ISC"
+}
