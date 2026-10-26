@@ -17,7 +17,7 @@ export default function Navbar() {
     STUDENT: 'bg-indigo-50 text-indigo-700 border-indigo-200',
     GUARD: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     WARDEN: 'bg-amber-50 text-amber-800 border-amber-200',
-    ADMIN: 'bg-purple-50 text-purple-700 border-purple-200',
+    ADMIN: 'bg-navy text-white border-navy',
   };
 
   const getInitials = (name) => {

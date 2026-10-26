@@ -109,16 +109,16 @@ export function SocketProvider({ children }) {
       {children}
       {/* Live Toast Notification Banner */}
       {liveToast && (
-        <div className="fixed bottom-6 right-6 max-w-md z-50 bg-slate-800 border-2 border-indigo-500 rounded-xl shadow-2xl p-4 text-white animate-bounce">
+        <div role="status" aria-live="polite" className="fixed bottom-6 right-6 left-6 sm:left-auto max-w-md z-50 bg-white border border-slate-200 border-l-4 border-l-primary-600 rounded-2xl shadow-lift p-4">
           <div className="flex items-start gap-3">
-            <span className="text-2xl">🔔</span>
             <div className="flex-1">
-              <h4 className="font-bold text-sm text-indigo-300">{liveToast.title}</h4>
-              <p className="text-xs text-slate-300 mt-1">{liveToast.message}</p>
+              <h4 className="font-bold text-sm text-navy">{liveToast.title}</h4>
+              <p className="text-sm text-slate-600 mt-0.5">{liveToast.message}</p>
             </div>
             <button
               onClick={() => setLiveToast(null)}
-              className="text-slate-400 hover:text-white text-xs font-bold px-1"
+              aria-label="Dismiss notification"
+              className="text-slate-400 hover:text-navy text-sm font-bold px-1"
             >
               ✕
             </button>
