@@ -75,20 +75,39 @@ export default function Register() {
     <div className="min-h-screen flex flex-col lg:flex-row bg-slate-950 selection:bg-indigo-500 selection:text-white">
       {/* LEFT COLUMN: BRAND HERO & OVERVIEW */}
       <div className="relative lg:w-5/12 p-8 lg:p-14 flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
+        {/* Real Campus Hostel Photography Background with Vignette */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-luminosity filter blur-xs pointer-events-none scale-105"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=80')`,
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-950/85 to-indigo-950/80 pointer-events-none" />
+
         <div className="absolute top-1/3 -left-20 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white">
-            <Package className="w-6 h-6" />
-          </div>
-          <div>
-            <span className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
-              Parcel<span className="text-indigo-400">Track</span>
-            </span>
-            <span className="text-[11px] font-medium tracking-wide text-slate-400 block -mt-0.5">
-              Hostel Intake & Handover Platform
-            </span>
-          </div>
+        <div className="relative z-10 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white group-hover:scale-105 transition-transform">
+              <Package className="w-6 h-6" />
+            </div>
+            <div>
+              <span className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
+                Parcel<span className="text-indigo-400">Track</span>
+              </span>
+              <span className="text-[11px] font-medium tracking-wide text-slate-400 block -mt-0.5">
+                Hostel Intake & Handover Platform
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            to="/"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 border border-white/15 text-slate-300 transition"
+          >
+            <Package className="w-3.5 h-3.5 text-amber-400" />
+            <span>Campus Portal</span>
+          </Link>
         </div>
 
         <div className="relative z-10 my-8 lg:my-0 space-y-4 max-w-md">
@@ -102,6 +121,22 @@ export default function Register() {
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
             Create an account to pre-register online orders, receive instant gate arrival alerts, and collect your packages with cryptographic OTP tokens.
           </p>
+
+          {/* Storeroom Real Photo Mini Card */}
+          <div className="p-3 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 flex items-center gap-3 shadow-lg">
+            <img
+              src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=200&q=80"
+              alt="Parcel Storage Racks"
+              className="w-12 h-12 rounded-xl object-cover border border-white/15 flex-shrink-0"
+            />
+            <div>
+              <span className="text-[9px] font-extrabold uppercase text-amber-400 tracking-wider block">
+                Hostel H-1 Storeroom
+              </span>
+              <p className="text-xs font-bold text-white">Rack B Custody Shelving</p>
+              <span className="text-[10px] text-slate-300">Live reception terminal active</span>
+            </div>
+          </div>
         </div>
 
         <div className="relative z-10 pt-6 border-t border-white/10 flex items-center gap-4 text-xs text-slate-400">

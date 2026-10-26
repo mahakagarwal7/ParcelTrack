@@ -8,7 +8,7 @@ let io = null;
 export function initSocketServer(httpServer) {
   io = new Server(httpServer, {
     cors: {
-      origin: config.clientUrl || '*',
+      origin: (origin, callback) => callback(null, true),
       credentials: true,
     },
     transports: ['websocket', 'polling'],

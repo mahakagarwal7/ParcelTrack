@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useSocket } from '../../context/SocketContext';
 import { Bell, LogOut, Package, Shield, User, Building, Check, Sparkles } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const { notifications, unreadCount, markAsRead, markAllAsRead, isConnected } = useSocket();
   const [showNotifications, setShowNotifications] = useState(false);
 
-  // Do not render navbar on public auth pages (login/register have their own full canvas)
-  if (!user) return null;
+  // Do not render navbar on public auth pages or the campus landing page (it has its own top navigation)
+  if (!user || location.pathname === '/') return null;
 
   const roleStyles = {
     STUDENT: 'bg-indigo-50 text-indigo-700 border-indigo-200',

@@ -18,7 +18,7 @@ const app = express();
 
 // Global Middlewares
 app.use(cors({
-  origin: config.clientUrl || true,
+  origin: (origin, callback) => callback(null, true),
   credentials: true,
 }));
 app.use(express.json());

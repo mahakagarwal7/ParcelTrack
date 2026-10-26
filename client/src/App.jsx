@@ -12,6 +12,7 @@ import StudentDashboard from './pages/student/StudentDashboard';
 import GuardDashboard from './pages/guard/GuardDashboard';
 import WardenDashboard from './pages/warden/WardenDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import Landing from './pages/landing/Landing';
 
 function RootRedirect() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -115,8 +116,8 @@ export default function App() {
                   }
                 />
 
-                {/* Root Route */}
-                <Route path="/" element={<RootRedirect />} />
+                {/* Root Route - Campus Landing Page with 3D Visualizer & Role Sandbox */}
+                <Route path="/" element={<Landing />} />
 
                 {/* Fallback */}
                 <Route path="*" element={<Navigate to="/" replace />} />

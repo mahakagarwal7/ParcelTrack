@@ -117,33 +117,45 @@ export default function Login() {
     <div className="min-h-screen flex flex-col lg:flex-row bg-slate-950 selection:bg-indigo-500 selection:text-white">
       {/* LEFT COLUMN: BRAND HERO & SHOWCASE (Deep Dark Gradient / High Aesthetic) */}
       <div className="relative lg:w-7/12 p-8 lg:p-14 flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
+        {/* Real Campus Hostel Photography Background with Vignette */}
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-luminosity filter blur-xs pointer-events-none scale-105"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1400&q=80')`,
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-950/85 to-indigo-950/80 pointer-events-none" />
+
         {/* Ambient Glowing Orbs */}
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
 
         {/* Top Brand Tag */}
         <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white group-hover:scale-105 transition-transform">
               <Package className="w-6 h-6" />
             </div>
             <div>
               <span className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
                 Parcel<span className="text-indigo-400">Track</span>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30 ml-1">
-                  Enterprise
+                  Hostel OS
                 </span>
               </span>
               <span className="text-[11px] font-medium tracking-wide text-slate-400 block -mt-0.5">
                 Hostel Parcel Reception & Secure Handover System
               </span>
             </div>
-          </div>
+          </Link>
 
-          <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-white/10 backdrop-blur-md border border-white/15 text-slate-300">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>MERN • Live Cloud DB</span>
-          </div>
+          <Link
+            to="/"
+            className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 border border-white/15 text-slate-300 transition"
+          >
+            <Package className="w-3.5 h-3.5 text-amber-400" />
+            <span>3D Unboxing & Campus</span>
+          </Link>
         </div>
 
         {/* Center Hero Content */}
@@ -201,6 +213,39 @@ export default function Login() {
                 <span>Intake: 04:30 PM (Gate 1)</span>
               </span>
               <span className="font-semibold text-slate-300">Room 101 • Hostel H-1</span>
+            </div>
+          </div>
+
+          {/* Hostel Gate 1 & Storeroom Real Photo Badges */}
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            <div className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
+              <img
+                src="https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=200&q=80"
+                alt="Gate 1 Intake Desk"
+                className="w-12 h-12 rounded-xl object-cover border border-white/15 flex-shrink-0"
+              />
+              <div className="text-left">
+                <span className="text-[9px] font-extrabold uppercase text-emerald-400 tracking-wider block">
+                  Gate 1 Checkpoint
+                </span>
+                <p className="text-xs font-bold text-white">Uniformed Guard Desk</p>
+                <span className="text-[10px] text-slate-400">Amazon & Flipkart Inward</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 shadow-lg">
+              <img
+                src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=200&q=80"
+                alt="Hostel Storeroom Racks"
+                className="w-12 h-12 rounded-xl object-cover border border-white/15 flex-shrink-0"
+              />
+              <div className="text-left">
+                <span className="text-[9px] font-extrabold uppercase text-amber-400 tracking-wider block">
+                  Hostel H-1 Storeroom
+                </span>
+                <p className="text-xs font-bold text-white">Shelves A-1 to D-8</p>
+                <span className="text-[10px] text-slate-400">Physical Custody Tagged</span>
+              </div>
             </div>
           </div>
         </div>

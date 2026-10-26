@@ -37,7 +37,11 @@ export function SocketProvider({ children }) {
       return;
     }
 
-    const socketInstance = io('/', {
+    const socketUrl = import.meta.env.VITE_API_URL
+      ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+      : '/';
+
+    const socketInstance = io(socketUrl, {
       auth: { token },
       transports: ['websocket', 'polling'],
     });
