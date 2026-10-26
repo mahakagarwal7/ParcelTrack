@@ -87,7 +87,7 @@ export default function WardenDashboard() {
               <AnimatePresence>{pending.map((a) => <ApprovalCard key={a._id} auth={a} onDecide={decide} />)}</AnimatePresence>
             </div>
           ))}
-          {tab === 'policy' && <PolicyForm key={policy?.updatedAt || 'p'} hostelId={user?.hostelId} policy={policy} onSaved={setPolicy} />}
+          {tab === 'policy' && <PolicyForm hostelId={user?.hostelId} policy={policy} onSaved={setPolicy} />}
           {tab === 'permissions' && <StandingPermissions />}
           {tab === 'activity' && <ActivityTable logs={logs} title="Recent parcel activity" />}
         </>

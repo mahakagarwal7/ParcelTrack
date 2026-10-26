@@ -4,14 +4,17 @@ import { X } from 'lucide-react';
 
 export default function Modal({ isOpen, onClose, title, children, maxWidth = 'max-w-xl', side = false }) {
   const panelRef = useRef(null);
+  // Keep the latest onClose without re-running the effect; re-running it would steal focus from inputs.
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     if (!isOpen) return undefined;
-    const onKey = (e) => e.key === 'Escape' && onClose();
+    const onKey = (e) => e.key === 'Escape' && onCloseRef.current();
     window.addEventListener('keydown', onKey);
     panelRef.current?.focus();
     return () => window.removeEventListener('keydown', onKey);
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   const panelMotion = side
     ? { initial: { x: '100%' }, animate: { x: 0 }, exit: { x: '100%' } }

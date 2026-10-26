@@ -26,6 +26,7 @@ export default function HandoverPanel({ parcels, onDone }) {
       onDone();
     } catch (err) {
       setError(guard.errorMessage(err, 'Verification failed. Check the OTP.'));
+      setOtp('');
     } finally {
       setBusy(false);
     }

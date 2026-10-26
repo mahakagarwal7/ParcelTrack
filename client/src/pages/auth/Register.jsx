@@ -7,7 +7,7 @@ import Button from '../../components/ui/Button';
 
 export default function Register() {
   // Public sign-up is for students. Staff accounts are assigned by an admin.
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'STUDENT', hostelId: 'H-1', studentId: '', roomNumber: '', phone: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'STUDENT', hostelId: '', studentId: '', roomNumber: '', phone: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -40,7 +40,7 @@ export default function Register() {
         <TextField id="reg-email" name="email" label="Email" type="email" autoComplete="email" value={formData.email} onChange={handleChange} />
         <TextField id="reg-password" name="password" label="Password" type="password" autoComplete="new-password" value={formData.password} onChange={handleChange} />
         <div className="grid grid-cols-2 gap-4">
-          <TextField id="reg-hostel" name="hostelId" label="Hostel ID" value={formData.hostelId} onChange={handleChange} />
+          <TextField id="reg-hostel" name="hostelId" label="Hostel ID" placeholder="e.g. BH-1" required value={formData.hostelId} onChange={handleChange} />
           <TextField id="reg-room" name="roomNumber" label="Room" value={formData.roomNumber} onChange={handleChange} />
         </div>
         <div className="grid grid-cols-2 gap-4">

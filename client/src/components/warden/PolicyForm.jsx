@@ -34,7 +34,8 @@ export default function PolicyForm({ hostelId, policy, onSaved }) {
       onSaved(saved);
       setNotice({ ok: true, text: 'Policy saved.' });
     } catch (err) {
-      setNotice({ ok: false, text: warden.errorMessage(err, 'Could not save policy') });
+      const details = err.response?.data?.errors;
+      setNotice({ ok: false, text: details?.length ? details.join(' ') : warden.errorMessage(err, 'Could not save policy') });
     } finally {
       setBusy(false);
     }
@@ -59,7 +60,7 @@ export default function PolicyForm({ hostelId, policy, onSaved }) {
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="pol-days" className="block text-sm font-semibold text-navy mb-1.5">Storage duration (days)</label>
-            <input id="pol-days" type="number" min="1" className={`${field} w-full`} value={form.maxStorageDays} onChange={(e) => set('maxStorageDays', e.target.value)} />
+            <input id="pol-days" type="number" min="1" max="60" className={`${field} w-full`} value={form.maxStorageDays} onChange={(e) => set('maxStorageDays', e.target.value)} />
           </div>
           <div>
             <label htmlFor="pol-size" className="block text-sm font-semibold text-navy mb-1.5">Largest parcel accepted</label>

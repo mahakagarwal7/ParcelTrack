@@ -5,11 +5,11 @@ import Button from '../ui/Button';
 import AuthDecisionBanner from '../authorization/AuthDecisionBanner';
 import { Truck } from 'lucide-react';
 
-// Splits delivery attempts using the authorization status returned by the backend.
+// Splits delivery attempts using the authorization returned by the backend. The backend marks an attempt
+// ACCEPTED as soon as it is authorized, so "not yet received" means the authorization has no parcelId.
 export default function GateQueues({ attempts, onReceive }) {
-  const open = attempts.filter((a) => a.status === 'AWAITING_AUTHORIZATION');
-  const ready = open.filter((a) => a.authorizationId?.status === 'AUTHORIZED');
-  const waiting = open.filter((a) => a.authorizationId?.status !== 'AUTHORIZED');
+  const ready = attempts.filter((a) => a.authorizationId?.status === 'AUTHORIZED' && !a.authorizationId?.parcelId);
+  const waiting = attempts.filter((a) => a.status === 'AWAITING_AUTHORIZATION' && a.authorizationId?.status?.startsWith('PENDING'));
 
   const row = (a, action) => (
     <li key={a._id} className="rounded-xl border border-slate-200 p-3 space-y-2">

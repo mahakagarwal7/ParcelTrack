@@ -12,7 +12,7 @@ const courierOf = (x) => x.courierName || x.carrier || 'Courier';
 
 function Candidate({ kind, item, onReceive }) {
   const authStatus = item.authorizationId?.status;
-  const open = kind === 'parcel' ? ['EXPECTED', 'AUTHORIZED'].includes(item.status) : item.status === 'AWAITING_AUTHORIZATION';
+  const open = kind === 'parcel' ? ['EXPECTED', 'AUTHORIZED'].includes(item.status) : !item.authorizationId?.parcelId;
   const canReceive = open && isAuthorized(authStatus);
   const Icon = kind === 'parcel' ? Package : Truck;
   return (

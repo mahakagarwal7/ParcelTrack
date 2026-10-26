@@ -48,7 +48,7 @@ export default function HostelsPanel({ users }) {
       {openId && policy && (
         <div>
           <h2 className="font-bold text-navy mb-2">Policy · Hostel {openId}</h2>
-          <PolicyForm key={`${openId}-${policy.updatedAt}`} hostelId={openId} policy={policy} onSaved={setPolicy} />
+          <PolicyForm key={openId} hostelId={openId} policy={policy} onSaved={setPolicy} />
         </div>
       )}
     </div>

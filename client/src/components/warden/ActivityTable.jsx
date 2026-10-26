@@ -17,7 +17,7 @@ export default function ActivityTable({ logs, title = 'Recent activity' }) {
                 <tr key={l._id}>
                   <td className="px-5 py-2.5 font-mono font-semibold text-primary-700">{l.action}</td>
                   <td className="px-5 py-2.5 text-slate-600">{l.actorRole || 'SYSTEM'}</td>
-                  <td className="px-5 py-2.5 text-slate-500 whitespace-nowrap">{new Date(l.createdAt).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</td>
+                  <td className="px-5 py-2.5 text-slate-500 whitespace-nowrap">{new Date(l.timestamp || l.createdAt).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</td>
                 </tr>
               ))}
             </tbody>

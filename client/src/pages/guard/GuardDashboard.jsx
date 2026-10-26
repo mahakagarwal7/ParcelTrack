@@ -82,8 +82,8 @@ export default function GuardDashboard() {
         </>
       )}
 
-      <ReceiveDrawer key={receiveTarget?.item?._id || 'none'} target={receiveTarget} onClose={() => setReceiveTarget(null)} onDone={load} />
-      <UnexpectedDeliveryModal key={unexpectedFor?._id || 'none'} student={unexpectedFor} onClose={() => setUnexpectedFor(null)} onDone={load} />
+      <ReceiveDrawer key={`receive-${receiveTarget?.item?._id || 'none'}`} target={receiveTarget} onClose={() => setReceiveTarget(null)} onDone={load} />
+      <UnexpectedDeliveryModal key={`unexpected-${unexpectedFor?._id || 'none'}`} student={unexpectedFor} onClose={() => setUnexpectedFor(null)} onDone={load} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Modal from '../ui/Modal';
 import OtpDisplay from '../ui/OtpDisplay';
 import { Loader2 } from 'lucide-react';
@@ -9,14 +9,17 @@ export default function OtpModal({ parcel, onClose }) {
   const [state, setState] = useState({ loading: true, otp: '', expiresAt: null, error: '' });
   const [now, setNow] = useState(Date.now());
 
+  // Request once per parcel. Each request invalidates the previous OTP, so a duplicate request
+  // (React StrictMode re-running effects in dev) could leave the displayed code invalid.
+  const requestedFor = useRef(null);
   useEffect(() => {
-    if (!parcel) return undefined;
-    let cancelled = false;
+    if (!parcel) { requestedFor.current = null; return; }
+    if (requestedFor.current === parcel._id) return;
+    requestedFor.current = parcel._id;
     setState({ loading: true, otp: '', expiresAt: null, error: '' });
     student.requestCollectionOtp(parcel._id)
-      .then((d) => !cancelled && setState({ loading: false, otp: d.otp, expiresAt: d.expiresAt, error: '' }))
-      .catch((err) => !cancelled && setState({ loading: false, otp: '', expiresAt: null, error: student.errorMessage(err, 'Could not generate OTP') }));
-    return () => { cancelled = true; };
+      .then((d) => requestedFor.current === parcel._id && setState({ loading: false, otp: d.otp, expiresAt: d.expiresAt, error: '' }))
+      .catch((err) => requestedFor.current === parcel._id && setState({ loading: false, otp: '', expiresAt: null, error: student.errorMessage(err, 'Could not generate OTP') }));
   }, [parcel]);
 
   useEffect(() => {

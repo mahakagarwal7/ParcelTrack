@@ -11,6 +11,7 @@ export function SocketProvider({ children }) {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [liveToast, setLiveToast] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   // Fetch initial notifications
   const fetchNotifications = async () => {
@@ -46,9 +47,8 @@ export function SocketProvider({ children }) {
       transports: ['websocket', 'polling'],
     });
 
-    socketInstance.on('connect', () => {
-      // Connected to Socket.IO server
-    });
+    socketInstance.on('connect', () => setIsConnected(true));
+    socketInstance.on('disconnect', () => setIsConnected(false));
 
     socketInstance.on('notification:new', (notification) => {
       setNotifications((prev) => [notification, ...prev]);
@@ -101,6 +101,7 @@ export function SocketProvider({ children }) {
     unreadCount,
     markAsRead,
     markAllAsRead,
+    isConnected,
     refreshNotifications: fetchNotifications,
   };
 

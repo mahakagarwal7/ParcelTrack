@@ -126,9 +126,9 @@ export default function StudentDashboard() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-3 items-start">
-        <section className="lg:col-span-2 space-y-4" aria-label="Your parcels">
+        <section className="lg:col-span-2 space-y-4 min-w-0" aria-label="Your parcels">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="inline-flex rounded-xl bg-slate-100 p-1 text-sm font-semibold overflow-x-auto" role="tablist">
+            <div className="inline-flex rounded-xl bg-slate-100 p-1 text-sm font-semibold overflow-x-auto max-w-full" role="tablist">
               {TABS.map(([id, label]) => (
                 <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
                   className={`px-3.5 h-9 rounded-lg whitespace-nowrap ${tab === id ? 'bg-white shadow-soft text-navy' : 'text-slate-500'}`}>{label}</button>
@@ -154,7 +154,7 @@ export default function StudentDashboard() {
           )}
         </section>
 
-        <aside className="space-y-6">
+        <aside className="space-y-6 min-w-0">
           <NotificationList notifications={notifications || []} onRead={markAsRead} />
         </aside>
       </div>

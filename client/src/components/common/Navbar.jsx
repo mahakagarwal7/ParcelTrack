@@ -40,13 +40,10 @@ export default function Navbar() {
               <Package className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-lg font-black tracking-tight text-slate-900 flex items-center gap-1">
+              <span className="text-lg font-black tracking-tight text-slate-900 flex items-center">
                 Parcel<span className="text-indigo-600">Track</span>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.2 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-200 ml-1">
-                  v2.0
-                </span>
               </span>
-              <span className="text-[10px] font-medium tracking-wide text-slate-500 block -mt-0.5">
+              <span className="hidden sm:block text-[10px] font-medium tracking-wide text-slate-500 -mt-0.5">
                 Hostel Reception & Handover System
               </span>
             </div>
@@ -54,7 +51,7 @@ export default function Navbar() {
 
           {/* Right Controls */}
           {user && (
-            <div className="flex items-center gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               {/* Real-time Socket Live Sync Pill */}
               <div
                 title={isConnected ? 'Real-time WebSocket connected' : 'Connecting to live updates...'}
@@ -77,7 +74,7 @@ export default function Navbar() {
 
               {/* Role Badge */}
               <div
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${
+                className={`hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border uppercase tracking-wider ${
                   roleStyles[user.role] || 'bg-slate-100 text-slate-700 border-slate-200'
                 }`}
               >
@@ -101,7 +98,7 @@ export default function Navbar() {
                 </button>
 
                 {showNotifications && (
-                  <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-sm rounded-2xl bg-white border border-slate-200 shadow-xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150">
                     <div className="p-3.5 border-b border-slate-100 bg-slate-50/70 flex items-center justify-between">
                       <div className="flex items-center gap-1.5 font-bold text-xs text-slate-800">
                         <Sparkles className="w-3.5 h-3.5 text-indigo-600" />

@@ -11,8 +11,8 @@ export default function ActivityFeed({ logs }) {
           {logs.map((l) => (
             <li key={l._id} className="py-2 flex justify-between gap-3 text-sm">
               <span className="font-mono font-semibold text-primary-700 truncate">{l.action}</span>
-              <time className="text-xs text-slate-500 shrink-0" dateTime={l.createdAt}>
-                {new Date(l.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              <time className="text-xs text-slate-500 shrink-0" dateTime={l.timestamp || l.createdAt}>
+                {new Date(l.timestamp || l.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </time>
             </li>
           ))}
