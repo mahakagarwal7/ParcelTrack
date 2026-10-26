@@ -1,7 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Package, User, Building, Lock, Mail, Phone, Hash, ArrowRight, AlertCircle } from 'lucide-react';
+import {
+  Package,
+  User,
+  Building,
+  Lock,
+  Mail,
+  Phone,
+  Hash,
+  ArrowRight,
+  AlertCircle,
+  Sparkles,
+  ShieldCheck,
+  CheckCircle2,
+} from 'lucide-react';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -59,228 +72,256 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-lg w-full space-y-6 bg-white p-8 rounded-2xl shadow-xl border border-slate-100">
-        {/* Brand Header */}
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-            <Package className="h-6 w-6 text-white" />
+    <div className="min-h-screen flex flex-col lg:flex-row bg-slate-950 selection:bg-indigo-500 selection:text-white">
+      {/* LEFT COLUMN: BRAND HERO & OVERVIEW */}
+      <div className="relative lg:w-5/12 p-8 lg:p-14 flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
+        <div className="absolute top-1/3 -left-20 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30 text-white">
+            <Package className="w-6 h-6" />
           </div>
-          <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-900">
-            Create an Account
-          </h2>
-          <p className="mt-1 text-sm text-slate-500">
-            Join ParcelTrack for verified hostel reception & handover
+          <div>
+            <span className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
+              Parcel<span className="text-indigo-400">Track</span>
+            </span>
+            <span className="text-[11px] font-medium tracking-wide text-slate-400 block -mt-0.5">
+              Hostel Intake & Handover Platform
+            </span>
+          </div>
+        </div>
+
+        <div className="relative z-10 my-8 lg:my-0 space-y-4 max-w-md">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-extrabold bg-indigo-500/15 border border-indigo-400/30 text-indigo-300 uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Join Your Campus Network</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+            Start Managing Your Deliveries Today.
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Create an account to pre-register online orders, receive instant gate arrival alerts, and collect your packages with cryptographic OTP tokens.
           </p>
         </div>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="bg-rose-50 border-l-4 border-rose-500 p-3.5 rounded-md flex items-center gap-2.5 text-rose-700 text-sm">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <span>{error}</span>
+        <div className="relative z-10 pt-6 border-t border-white/10 flex items-center gap-4 text-xs text-slate-400">
+          <div className="flex items-center gap-1.5 font-semibold text-slate-300">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span>Encrypted Credentials</span>
           </div>
-        )}
+          <span>•</span>
+          <div className="flex items-center gap-1.5 font-semibold text-slate-300">
+            <ShieldCheck className="w-4 h-4 text-indigo-400" />
+            <span>Hostel Multi-Tenancy Scoped</span>
+          </div>
+        </div>
+      </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Role Selection */}
+      {/* RIGHT COLUMN: REGISTRATION FORM */}
+      <div className="lg:w-7/12 bg-slate-50 flex items-center justify-center p-6 sm:p-10 lg:p-12 overflow-y-auto">
+        <div className="w-full max-w-lg bg-white p-8 sm:p-10 rounded-3xl shadow-xl border border-slate-200/90 space-y-6">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
-              Account Role
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { id: 'STUDENT', label: 'Student' },
-                { id: 'GUARD', label: 'Security Guard' },
-                { id: 'WARDEN', label: 'Hostel Warden' },
-              ].map((r) => (
-                <button
-                  type="button"
-                  key={r.id}
-                  onClick={() => setFormData({ ...formData, role: r.id })}
-                  className={`py-2 px-3 text-xs font-medium rounded-lg border text-center transition-all ${
-                    formData.role === r.id
-                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                  }`}
-                >
-                  {r.label}
-                </button>
-              ))}
-            </div>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900">
+              Create an Account
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              Join your hostel's parcel network for verified reception & collection.
+            </p>
           </div>
 
-          {/* Full Name & Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
-                Full Name *
-              </label>
-              <div className="relative rounded-lg shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <User className="h-4 w-4" />
-                </div>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  className="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
-                Email Address *
-              </label>
-              <div className="relative rounded-lg shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <Mail className="h-4 w-4" />
-                </div>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="student@hostel.edu"
-                  className="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Password & Hostel ID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
-                Password *
-              </label>
-              <div className="relative rounded-lg shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <Lock className="h-4 w-4" />
-                </div>
-                <input
-                  type="password"
-                  name="password"
-                  required
-                  minLength={6}
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Min 6 characters"
-                  className="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
-                Hostel ID *
-              </label>
-              <div className="relative rounded-lg shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <Building className="h-4 w-4" />
-                </div>
-                <input
-                  type="text"
-                  name="hostelId"
-                  required
-                  value={formData.hostelId}
-                  onChange={handleChange}
-                  placeholder="H-1"
-                  className="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm uppercase placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Student Specific Fields */}
-          {formData.role === 'STUDENT' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
-                  Roll / Student ID
-                </label>
-                <div className="relative rounded-lg shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <Hash className="h-4 w-4" />
-                  </div>
-                  <input
-                    type="text"
-                    name="studentId"
-                    value={formData.studentId}
-                    onChange={handleChange}
-                    placeholder="STU-2026-01"
-                    className="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
-                  Room Number
-                </label>
-                <div className="relative rounded-lg shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <Building className="h-4 w-4" />
-                  </div>
-                  <input
-                    type="text"
-                    name="roomNumber"
-                    value={formData.roomNumber}
-                    onChange={handleChange}
-                    placeholder="101"
-                    className="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                </div>
-              </div>
+          {error && (
+            <div className="bg-rose-50 border border-rose-200 p-3.5 rounded-2xl flex items-center gap-2.5 text-rose-700 text-xs font-semibold">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{error}</span>
             </div>
           )}
 
-          {/* Phone Number */}
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1">
-              Contact Phone (Optional)
-            </label>
-            <div className="relative rounded-lg shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                <Phone className="h-4 w-4" />
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Role Selection */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                Account Role
+              </label>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: 'STUDENT', label: 'Student' },
+                  { id: 'GUARD', label: 'Security Guard' },
+                  { id: 'WARDEN', label: 'Hostel Warden' },
+                ].map((r) => (
+                  <button
+                    type="button"
+                    key={r.id}
+                    onClick={() => setFormData({ ...formData, role: r.id })}
+                    className={`py-2 px-3 text-xs font-bold rounded-xl border text-center transition ${
+                      formData.role === r.id
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    {r.label}
+                  </button>
+                ))}
               </div>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="+91 9876543210"
-                className="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-60"
-          >
-            {loading ? (
-              <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-            ) : (
-              <>
-                <span>Complete Registration</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
+            {/* Name & Email */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Full Name *
+                </label>
+                <div className="relative">
+                  <User className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="John Doe"
+                    className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Email Address *
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="student@hostel.edu"
+                    className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Password & Hostel ID */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Password *
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                  <input
+                    type="password"
+                    name="password"
+                    required
+                    minLength={6}
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Min 6 characters"
+                    className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Hostel ID *
+                </label>
+                <div className="relative">
+                  <Building className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                  <input
+                    type="text"
+                    name="hostelId"
+                    required
+                    value={formData.hostelId}
+                    onChange={handleChange}
+                    placeholder="H-1"
+                    className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-xs uppercase placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-bold"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Student Specific Fields */}
+            {formData.role === 'STUDENT' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-slate-50/90 rounded-2xl border border-slate-200">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Student / Roll ID
+                  </label>
+                  <div className="relative">
+                    <Hash className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                    <input
+                      type="text"
+                      name="studentId"
+                      value={formData.studentId}
+                      onChange={handleChange}
+                      placeholder="STU-2026-01"
+                      className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-mono"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    Room Number
+                  </label>
+                  <div className="relative">
+                    <Building className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                    <input
+                      type="text"
+                      name="roomNumber"
+                      value={formData.roomNumber}
+                      onChange={handleChange}
+                      placeholder="101"
+                      className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-bold"
+                    />
+                  </div>
+                </div>
+              </div>
             )}
-          </button>
-        </form>
 
-        <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
-          Already registered?{' '}
-          <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-500 underline">
-            Sign in here
-          </Link>
+            {/* Phone */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
+                Contact Phone (Optional)
+              </label>
+              <div className="relative">
+                <Phone className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+91 9876543210"
+                  className="w-full pl-10 pr-3.5 py-2.5 border border-slate-300 rounded-xl text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 font-medium"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl shadow-md shadow-indigo-600/20 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 transition-all transform active:scale-98 disabled:opacity-60"
+            >
+              {loading ? (
+                <span className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+              ) : (
+                <>
+                  <span>Create Account</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
+            Already have an account?{' '}
+            <Link to="/login" className="font-bold text-indigo-600 hover:text-indigo-700 underline">
+              Sign in here
+            </Link>
+          </div>
         </div>
       </div>
     </div>

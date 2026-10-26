@@ -8,6 +8,9 @@ export default function Navbar() {
   const { notifications, unreadCount, markAsRead, markAllAsRead, isConnected } = useSocket();
   const [showNotifications, setShowNotifications] = useState(false);
 
+  // Do not render navbar on public auth pages (login/register have their own full canvas)
+  if (!user) return null;
+
   const roleStyles = {
     STUDENT: 'bg-indigo-50 text-indigo-700 border-indigo-200',
     GUARD: 'bg-emerald-50 text-emerald-700 border-emerald-200',
