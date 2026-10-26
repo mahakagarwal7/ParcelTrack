@@ -6,7 +6,7 @@ let mongodInstance = null;
 
 export async function connectDB(customUri = null) {
   try {
-    let uri = customUri || config.mongoUri;
+    let uri = customUri || (process.env.NODE_ENV === 'test' ? null : config.mongoUri);
 
     if (!uri) {
       console.log('No MONGO_URI provided. Starting in-memory MongoDB server...');

@@ -20,6 +20,7 @@ import {
   Calendar,
   Truck,
   MapPin,
+  Camera,
 } from 'lucide-react';
 
 export default function StudentDashboard() {
@@ -393,6 +394,17 @@ export default function StudentDashboard() {
                           <div className="text-[11px] text-slate-400 truncate max-w-xs">
                             {p.description}
                           </div>
+                        )}
+                        {p.photoUrl && (
+                          <a
+                            href={p.photoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200 hover:bg-indigo-100"
+                          >
+                            <Camera className="w-3 h-3" />
+                            <span>View Inspection Photo</span>
+                          </a>
                         )}
                       </td>
                       <td className="py-3.5 px-4">

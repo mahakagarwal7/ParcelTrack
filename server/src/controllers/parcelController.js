@@ -49,10 +49,11 @@ export async function getParcel(req, res, next) {
 
 export async function receiveParcel(req, res, next) {
   try {
-    const { storageLocation, remarks } = req.body;
+    const { storageLocation, remarks, photoUrl } = req.body;
     const parcel = await parcelService.receiveExpectedParcel(req.params.id, req.user, {
       storageLocation,
       remarks,
+      photoUrl,
     });
 
     res.status(200).json({

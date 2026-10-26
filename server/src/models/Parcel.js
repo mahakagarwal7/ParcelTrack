@@ -120,6 +120,11 @@ const parcelSchema = new mongoose.Schema(
       trim: true,
       default: null,
     },
+    photoUrl: {
+      type: String,
+      trim: true,
+      default: null,
+    },
     collectedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

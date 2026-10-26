@@ -63,10 +63,11 @@ export async function getAttempt(req, res, next) {
 
 export async function receiveUnexpectedDelivery(req, res, next) {
   try {
-    const { storageLocation, remarks } = req.body;
+    const { storageLocation, remarks, photoUrl } = req.body;
     const result = await parcelService.receiveUnexpectedParcel(req.params.id, req.user, {
       storageLocation,
       remarks,
+      photoUrl,
     });
 
     res.status(201).json({

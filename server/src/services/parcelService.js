@@ -183,7 +183,7 @@ export async function getParcelById(idOrParcelId, requestingUser) {
   return parcel;
 }
 
-export async function receiveExpectedParcel(parcelId, guardUser, { storageLocation, remarks }) {
+export async function receiveExpectedParcel(parcelId, guardUser, { storageLocation, remarks, photoUrl }) {
   const isObjectId = /^[0-9a-fA-F]{24}$/.test(parcelId);
   const filter = isObjectId ? { _id: parcelId } : { parcelId: parcelId.toUpperCase() };
 
@@ -213,6 +213,9 @@ export async function receiveExpectedParcel(parcelId, guardUser, { storageLocati
   parcel.receivedBy = guardUser._id;
   parcel.receivedAt = new Date();
   parcel.storageLocation = storageLocation || 'Gate Reception Counter';
+  if (photoUrl) {
+    parcel.photoUrl = photoUrl;
+  }
 
   parcel.statusHistory.push({
     status: PARCEL_STATUS.RECEIVED,
@@ -247,7 +250,7 @@ export async function receiveExpectedParcel(parcelId, guardUser, { storageLocati
   return parcel;
 }
 
-export async function receiveUnexpectedParcel(attemptId, guardUser, { storageLocation, remarks }) {
+export async function receiveUnexpectedParcel(attemptId, guardUser, { storageLocation, remarks, photoUrl }) {
   const attempt = await DeliveryAttempt.findById(attemptId).populate('authorizationId');
   if (!attempt) {
     throw ApiError.notFound('Delivery attempt not found');
@@ -289,6 +292,7 @@ export async function receiveUnexpectedParcel(attemptId, guardUser, { storageLoc
     receivedBy: guardUser._id,
     receivedAt: new Date(),
     storageLocation: storageLocation || 'Gate Reception Counter',
+    photoUrl: photoUrl || null,
     statusHistory: [
       {
         status: PARCEL_STATUS.RECEIVED,

@@ -20,6 +20,7 @@ import {
   FileText,
   Clock,
   ArrowRight,
+  Camera,
 } from 'lucide-react';
 
 export default function GuardDashboard() {
@@ -48,7 +49,9 @@ export default function GuardDashboard() {
     shelfLocation: 'Shelf A-1',
     condition: 'INTACT',
     damageNotes: '',
+    photoUrl: '',
   });
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [receiveLoading, setReceiveLoading] = useState(false);
   const [receiveMessage, setReceiveMessage] = useState('');
 
@@ -177,6 +180,30 @@ export default function GuardDashboard() {
       setReceiveMessage(`Error: ${err.response?.data?.message || 'Failed to receive parcel'}`);
     } finally {
       setReceiveLoading(false);
+    }
+  };
+
+  // Upload parcel/damage photo to Cloudinary
+  const handlePhotoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingPhoto(true);
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const res = await axiosClient.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (res.data.success) {
+        setReceiveForm((prev) => ({ ...prev, photoUrl: res.data.url }));
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to upload photo to Cloudinary. Check that CLOUDINARY keys are set in server/.env.');
+    } finally {
+      setUploadingPhoto(false);
     }
   };
 
@@ -570,6 +597,45 @@ export default function GuardDashboard() {
                         placeholder="Minor tape tear on corner..."
                         className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1 flex items-center gap-1.5">
+                        <Camera className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>Inspection Photo (Cloudinary Upload)</span>
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        disabled={uploadingPhoto}
+                        className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer"
+                      />
+                      {uploadingPhoto && (
+                        <p className="text-[11px] text-indigo-600 mt-1 flex items-center gap-1">
+                          <RefreshCw className="w-3 h-3 animate-spin" /> Uploading to Cloudinary...
+                        </p>
+                      )}
+                      {receiveForm.photoUrl && (
+                        <div className="mt-2 p-2 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2">
+                          <img
+                            src={receiveForm.photoUrl}
+                            alt="Inspection Preview"
+                            className="w-10 h-10 object-cover rounded border border-emerald-300"
+                          />
+                          <div className="text-[11px] text-emerald-800">
+                            <p className="font-bold">Photo Attached</p>
+                            <a
+                              href={receiveForm.photoUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-indigo-600 hover:underline"
+                            >
+                              View on Cloudinary CDN
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <button
