@@ -7,8 +7,8 @@ const statusConfig = {
     label: 'Expected / In Transit',
   },
   AUTHORIZED: {
-    bg: 'bg-blue-50 text-blue-700 border-blue-200/80',
-    dot: 'bg-blue-500',
+    bg: 'bg-primary-50 text-primary-700 border-primary-200',
+    dot: 'bg-primary-500',
     label: 'Pre-Authorized',
   },
   RECEIVED: {
@@ -56,6 +56,11 @@ const statusConfig = {
     dot: 'bg-rose-500',
     label: 'Gate Denied',
   },
+  EXPIRED: {
+    bg: 'bg-slate-100 text-slate-600 border-slate-300',
+    dot: 'bg-slate-400',
+    label: 'Expired',
+  },
 };
 
 export default function StatusBadge({ status, className = '' }) {
@@ -67,6 +72,7 @@ export default function StatusBadge({ status, className = '' }) {
 
   return (
     <span
+      role="status"
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${config.bg} ${className}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
