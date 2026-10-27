@@ -38,8 +38,9 @@ export function SocketProvider({ children }) {
       return;
     }
 
-    const socketUrl = import.meta.env.VITE_API_URL
-      ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+    const rawUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
+    const socketUrl = rawUrl
+      ? rawUrl.replace(/\/api$/, '')
       : '/';
 
     const socketInstance = io(socketUrl, {
