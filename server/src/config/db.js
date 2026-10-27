@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import { config } from './env.js';
 
 let mongodInstance = null;
@@ -9,7 +8,11 @@ export async function connectDB(customUri = null) {
     let uri = customUri || (process.env.NODE_ENV === 'test' ? null : config.mongoUri);
 
     if (!uri) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('MONGO_URI environment variable is required in production.');
+      }
       console.log('No MONGO_URI provided. Starting in-memory MongoDB server...');
+      const { MongoMemoryServer } = await import('mongodb-memory-server');
       mongodInstance = await MongoMemoryServer.create();
       uri = mongodInstance.getUri();
       console.log(`In-memory MongoDB started at: ${uri}`);
