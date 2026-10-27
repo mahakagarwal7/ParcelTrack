@@ -3,8 +3,17 @@
 
 [![Test Suites](https://img.shields.io/badge/tests-80%2F80%20passed-brightgreen.svg)](https://github.com/mahakagarwal7/ParcelTrack)
 [![Architecture](https://img.shields.io/badge/stack-MERN%20%7C%20Socket.IO%20%7C%20TailwindCSS-indigo.svg)](https://github.com/mahakagarwal7/ParcelTrack)
+[![Demo Video](https://img.shields.io/badge/Demo%20Video-Google%20Drive-red.svg)](https://drive.google.com/file/d/1kEbhxvk7V8EtCPQxVJjnLY38AfZGjqE2/view?usp=sharing)
 [![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-blue.svg)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/license-ISC-green.svg)](LICENSE)
+
+> 🎥 **Project Demo / Video Walkthrough**: [Watch on Google Drive](https://drive.google.com/file/d/1kEbhxvk7V8EtCPQxVJjnLY38AfZGjqE2/view?usp=sharing)
+
+---
+
+## 🎥 Project Demonstration & Video Walkthrough
+Watch the complete demonstration showcasing the student portal, gate guard reception queue, single-use OTP cryptographic verification, and warden policy controls:
+- **Video Link**: [Google Drive Demo Video](https://drive.google.com/file/d/1kEbhxvk7V8EtCPQxVJjnLY38AfZGjqE2/view?usp=sharing)
 
 ---
 
