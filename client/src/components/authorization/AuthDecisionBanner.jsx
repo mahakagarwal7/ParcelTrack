@@ -24,10 +24,11 @@ export default function AuthDecisionBanner({ status, compact = false }) {
   return (
     <motion.div
       role="status"
+      title={d.hint}
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.2 }}
-      className={`rounded-xl flex items-center gap-3 ${compact ? 'px-3 py-2' : 'px-4 py-3.5'} ${d.cls}`}
+      className={`rounded-xl flex items-center gap-3 cursor-default select-none shadow-sm ${compact ? 'px-3 py-2' : 'px-4 py-3.5'} ${d.cls}`}
     >
       <Icon className={compact ? 'w-5 h-5 shrink-0' : 'w-7 h-7 shrink-0'} aria-hidden="true" />
       <div className="leading-tight">

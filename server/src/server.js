@@ -18,7 +18,10 @@ async function startServer() {
     });
   } catch (error) {
     console.error('Failed to start server:', error);
-    process.exit(1);
+    // Allow stdout/stderr streams to flush to Render before process exit
+    setTimeout(() => {
+      process.exit(1);
+    }, 250);
   }
 }
 
