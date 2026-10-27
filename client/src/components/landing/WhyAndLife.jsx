@@ -1,5 +1,6 @@
 import React from 'react';
 import { Clock, EyeOff, ShieldCheck, FileSearch } from 'lucide-react';
+import parcelLockerImg from '../../assets/hostel_parcel_locker.png';
 
 const POINTS = [
   { icon: Clock, title: 'Never miss a delivery', body: 'Deliveries land while you are in class. Reception is handled for you, with your consent.' },
@@ -9,9 +10,9 @@ const POINTS = [
 ];
 
 const PHOTOS = [
-  { src: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', alt: 'Students walking across a campus path', cls: 'row-span-2' },
+  { src: parcelLockerImg, alt: 'Hostel parcel locker bank with courier delivery package handover', cls: 'row-span-2' },
   { src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80', alt: 'Parcels arranged on storage shelves', cls: '' },
-  { src: 'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80', alt: 'Reception desk at a residence entrance', cls: '' },
+  { src: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', alt: 'Students walking across campus path', cls: '' },
 ];
 
 export default function WhyAndLife() {

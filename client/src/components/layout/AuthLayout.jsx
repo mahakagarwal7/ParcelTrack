@@ -7,210 +7,244 @@ import {
   MapPin,
   KeyRound,
   Clock,
-  ArrowLeft,
-  Truck,
-  CheckCircle2,
+  ArrowRight,
   Sparkles,
+  CheckCircle2,
+  Truck,
+  Shield,
+  Check,
 } from 'lucide-react';
-
-// Mixture of Hostel and Parcel imagery
-const COURIER_DELIVERY_BG = 'https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=1400&q=80';
-const HOSTEL_CAMPUS_IMG = 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80';
-const PARCEL_SHELVES_IMG = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=400&q=80';
+import parcelLockerImg from '../../assets/hostel_parcel_locker.png';
 
 export default function AuthLayout({ title, subtitle, children }) {
   return (
-    <div className="min-h-screen grid lg:grid-cols-12 bg-surface selection:bg-primary-500 selection:text-white">
-      {/* LEFT COLUMN: 7 COLS — MIXTURE OF HOSTEL CAMPUS + PARCEL RECEPTION SHOWCASE */}
-      <aside className="relative hidden lg:flex lg:col-span-7 flex-col justify-between p-10 xl:p-14 text-white overflow-hidden bg-navy">
-        {/* Photorealistic Courier & Parcel Delivery Background */}
-        <img
-          src={COURIER_DELIVERY_BG}
-          alt="Hostel courier package intake"
-          className="absolute inset-0 w-full h-full object-cover opacity-25 mix-blend-luminosity filter blur-[1px] scale-105 pointer-events-none"
+    <div
+      className="min-h-screen flex flex-col lg:flex-row selection:bg-indigo-500 selection:text-white"
+      style={{ backgroundColor: '#090d16' }}
+    >
+      {/* ========================================================= */}
+      {/* LEFT COLUMN: SHADCN / DELISAS PREMIUM CAMPUS SAAS HERO   */}
+      {/* Featuring the User-Selected Smart Parcel Locker Visual    */}
+      {/* ========================================================= */}
+      <aside
+        className="relative lg:w-7/12 xl:w-7/12 hidden lg:flex flex-col justify-between p-8 xl:p-12 overflow-hidden border-r border-white/10"
+        style={{ backgroundColor: '#090d16' }}
+      >
+        {/* Subtle Ambient Radial Glows */}
+        <div
+          className="absolute -top-24 -left-24 w-96 h-96 rounded-full blur-[100px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(79, 70, 229, 0.25) 0%, transparent 70%)' }}
+        />
+        <div
+          className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full blur-[120px] pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)' }}
         />
 
-        {/* Rich Gradient Vignette */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-navy via-navy/90 to-navy/70 pointer-events-none" />
-
-        {/* Ambient Glows */}
-        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-primary-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        {/* 1. TOP HEADER: BRAND + BACK TO CAMPUS & 3D UNBOXING */}
+        {/* 1. TOP BAR: BRAND + RETURN TO 3D CAMPUS */}
         <div className="relative z-10 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-primary-600 via-primary-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-primary-900/40 text-white group-hover:scale-105 transition-transform">
-              <Package className="w-6 h-6 text-amber-400" />
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+              <Package className="w-6 h-6 text-white" />
             </div>
             <div>
-              <span className="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
-                Parcel<span className="text-primary-300">Track</span>
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-white/10 text-amber-300 rounded-full border border-white/15">
-                  Hostel OS
+              <span className="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                Parcel<span className="text-indigo-400">Track</span>
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-indigo-500/20 text-indigo-300 rounded-full border border-indigo-500/30">
+                  Hostel OS v2.0
                 </span>
               </span>
-              <span className="text-[11px] font-medium tracking-wide text-slate-300 block -mt-0.5">
-                Hostel Parcel Reception & Secure Handover
+              <span className="text-[11px] font-medium tracking-wide text-slate-400 block -mt-0.5">
+                University Parcel Reception & Secure Handover
               </span>
             </div>
           </Link>
 
           <Link
             to="/"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 transition"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 transition group"
           >
-            <Package className="w-3.5 h-3.5 text-amber-400" />
+            <Package className="w-3.5 h-3.5 text-indigo-400" />
             <span>3D Unboxing & Campus</span>
+            <ArrowRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 group-hover:text-white transition" />
           </Link>
         </div>
 
-        {/* 2. CENTER CONTENT: MIXTURE OF HOSTEL CAMPUS + PARCEL LOGISTICS */}
-        <div className="relative z-10 my-8 space-y-6 max-w-xl">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-extrabold bg-primary-500/20 border border-primary-400/30 text-primary-200 uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Campus Hostel Logistics Hub</span>
-            </div>
-            <h2 className="text-3xl xl:text-4xl font-black text-white tracking-tight leading-tight">
-              Hostel Parcels Delivered, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-primary-200 to-teal-300">
-                Safely Handed Over
-              </span>{' '}
-              at Gate 1.
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Eliminating lost packages, delivery gate disputes, and pen-and-paper logs across university dorms. Connecting couriers, gate security, and resident students.
-            </p>
-          </div>
+        {/* 2. CENTER: USER SELECTED SMART PARCEL LOCKER VISUAL & LIVE TRACKER */}
+        <div className="relative z-10 my-4 space-y-4 max-w-xl">
+          {/* Photorealistic Smart Parcel Locker Hero Visual */}
+          <div className="relative rounded-3xl overflow-hidden border-2 border-white/15 shadow-2xl bg-slate-900 group">
+            <img
+              src={parcelLockerImg}
+              alt="University Hostel Smart Parcel Locker Bank and Student Package Handover"
+              className="w-full h-56 xl:h-64 object-cover group-hover:scale-[1.02] transition-transform duration-700"
+            />
 
-          {/* DUAL MINI-CARDS SHOWCASING BOTH HOSTEL & PARCEL */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Hostel Campus Card */}
-            <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 flex items-center gap-3 shadow-lg">
-              <img
-                src={HOSTEL_CAMPUS_IMG}
-                alt="Hostel Dormitory Building"
-                className="w-12 h-12 rounded-xl object-cover border border-white/20 shrink-0"
-              />
-              <div className="text-left overflow-hidden">
-                <span className="text-[9px] font-extrabold uppercase text-amber-300 tracking-wider block truncate">
-                  Hostel H-1 Residence
-                </span>
-                <p className="text-xs font-bold text-white truncate">450 Student Dorms</p>
-                <span className="text-[10px] text-slate-300 block truncate">Gate 1 Intake Terminal</span>
-              </div>
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent pointer-events-none" />
+
+            {/* Floating Live Badge Top Left */}
+            <div className="absolute top-3.5 left-3.5 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-white/15 text-xs text-white shadow-lg">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-extrabold text-amber-300">Hostel H-1 • Gate 1 Desk</span>
+              <span className="text-white/40">|</span>
+              <span className="text-slate-300 font-mono text-[11px]">Guard Intake Active</span>
             </div>
 
-            {/* Parcel Shelves Card */}
-            <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 flex items-center gap-3 shadow-lg">
-              <img
-                src={PARCEL_SHELVES_IMG}
-                alt="Hostel Storeroom Parcel Shelves"
-                className="w-12 h-12 rounded-xl object-cover border border-white/20 shrink-0"
-              />
-              <div className="text-left overflow-hidden">
-                <span className="text-[9px] font-extrabold uppercase text-teal-300 tracking-wider block truncate">
-                  Storeroom Shelves
+            {/* Floating Live Badge Top Right */}
+            <div className="absolute top-3.5 right-3.5 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-white/15 text-xs text-white shadow-lg">
+              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="font-bold text-emerald-300">Shelf B-2 Tagged</span>
+            </div>
+
+            {/* Floating Live Badge Bottom Right: OTP Token */}
+            <div className="absolute bottom-3.5 right-3.5 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-950/90 backdrop-blur-md border border-indigo-500/30 text-xs shadow-xl">
+              <KeyRound className="w-3.5 h-3.5 text-indigo-400" />
+              <div className="text-left">
+                <span className="text-[9px] uppercase font-bold text-indigo-300 block leading-none">
+                  Single-Use OTP
                 </span>
-                <p className="text-xs font-bold text-white truncate">Rack A-1 to D-8</p>
-                <span className="text-[10px] text-slate-300 block truncate">Custody Shelf Tracking</span>
+                <span className="font-mono font-black text-white text-xs tracking-wider">
+                  729 415
+                </span>
               </div>
             </div>
           </div>
 
-          {/* LIVE PARCEL INTAKE SIMULATOR CARD */}
-          <div className="bg-slate-900/85 backdrop-blur-xl border border-white/15 rounded-3xl p-5 shadow-2xl space-y-3.5 text-xs">
+          {/* DELISAS / SHADCN SIGNATURE LIVE TRACKING CARD */}
+          <div className="bg-slate-900/90 backdrop-blur-xl border border-white/15 rounded-3xl p-5 shadow-2xl space-y-3.5 text-xs">
+            {/* Card Header: Courier & Status */}
             <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+              <div className="flex items-center gap-2.5">
+                <span className="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
+                  <Truck className="w-3 h-3 text-amber-400" />
                   Amazon Prime
                 </span>
-                <span className="font-mono text-slate-300 text-[11px]">PKG-H1-9874-IN</span>
+                <span className="font-mono text-slate-400 text-xs font-semibold">
+                  AWB-H1-9874-IN
+                </span>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">
-                <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
-                <span>Ready at Gate 1</span>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Ready for Pickup</span>
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-slate-200">
-              <div className="bg-white/5 p-2.5 rounded-2xl border border-white/10">
-                <span className="text-[10px] text-slate-400 uppercase font-bold block">Assigned Shelf</span>
-                <span className="font-mono font-black text-teal-300 text-sm mt-0.5 flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-teal-400" /> Shelf B-2
+            {/* Middle Grid: Storage Shelf & Recipient */}
+            <div className="grid grid-cols-2 gap-3 text-slate-300">
+              <div className="bg-white/5 p-3 rounded-2xl border border-white/10 space-y-0.5">
+                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
+                  Assigned Storage Rack
+                </span>
+                <span className="font-mono font-black text-emerald-400 text-sm flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                  Shelf B-2 (Rack 4)
+                </span>
+                <span className="text-[10px] text-slate-400 block truncate">
+                  Hostel H-1 Intake Storeroom
                 </span>
               </div>
-              <div className="bg-white/5 p-2.5 rounded-2xl border border-white/10">
-                <span className="text-[10px] text-slate-400 uppercase font-bold block">Single-Use OTP</span>
-                <span className="font-mono font-black text-amber-300 text-sm mt-0.5 flex items-center gap-1">
-                  <KeyRound className="w-3.5 h-3.5 text-amber-400" /> 729 415
+
+              <div className="bg-white/5 p-3 rounded-2xl border border-white/10 space-y-0.5">
+                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
+                  Resident Destination
+                </span>
+                <span className="font-black text-white text-sm flex items-center gap-1.5 truncate">
+                  <Building2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                  Room 101 (Hostel H-1)
+                </span>
+                <span className="text-[10px] text-slate-400 block truncate">
+                  Kabir Mehta (ID: CS2024)
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-slate-300 pt-1">
-              <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-slate-400" />
-                <span>Gate 1 Guard Verified</span>
-              </span>
-              <span className="font-semibold text-white">Room 101 • Hostel H-1</span>
+            {/* Stepper Timeline: Gate ➔ Storeroom ➔ Handover */}
+            <div className="pt-2 border-t border-white/10 space-y-2">
+              <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden flex">
+                <div className="h-full bg-emerald-500 w-2/3 rounded-full" />
+              </div>
+
+              <div className="flex justify-between items-center text-[10px] text-slate-400 pt-0.5">
+                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                  <Check className="w-3 h-3" /> Gate 1 Verified
+                </span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                  <Check className="w-3 h-3" /> Shelf B-2 Tagged
+                </span>
+                <span className="text-indigo-300 font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-ping" /> Awaiting OTP Pickup
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* 3. BOTTOM TRUST PILLARS */}
-        <div className="relative z-10 pt-4 border-t border-white/10 flex flex-wrap items-center gap-4 text-xs text-slate-300">
-          <div className="flex items-center gap-1.5 font-semibold">
-            <CheckCircle2 className="w-4 h-4 text-teal-400" />
-            <span>Zero Lost Parcels</span>
+        <div className="relative z-10 pt-3 border-t border-white/10 flex flex-wrap items-center gap-5 text-xs text-slate-400">
+          <div className="flex items-center gap-2 text-slate-300 font-semibold">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span>Zero Lost Parcels at Gate 1</span>
           </div>
           <span className="text-white/20">•</span>
-          <div className="flex items-center gap-1.5 font-semibold">
-            <ShieldCheck className="w-4 h-4 text-amber-400" />
+          <div className="flex items-center gap-2 text-slate-300 font-semibold">
+            <Shield className="w-4 h-4 text-indigo-400" />
             <span>Constant-Time OTP Handover</span>
           </div>
           <span className="text-white/20">•</span>
-          <div className="flex items-center gap-1.5 font-semibold">
-            <Building2 className="w-4 h-4 text-primary-300" />
-            <span>Hostel Multi-Tenancy Scoped</span>
+          <div className="flex items-center gap-2 text-slate-300 font-semibold">
+            <Building2 className="w-4 h-4 text-purple-400" />
+            <span>Live Cloud Multi-Tenancy</span>
           </div>
         </div>
       </aside>
 
-      {/* RIGHT COLUMN: 5 COLS — CLEAN AUTH FORM */}
-      <main className="lg:col-span-5 flex items-center justify-center px-4 py-10 sm:px-8 bg-surface">
-        <div className="w-full max-w-md bg-white p-7 sm:p-9 rounded-3xl shadow-lift border border-slate-200/80">
-          {/* Mobile Top Brand & Hostel Parcel Badge */}
-          <div className="lg:hidden mb-6 space-y-3">
-            <Link to="/" className="flex items-center gap-2 font-black text-xl text-navy">
-              <div className="w-8 h-8 rounded-xl bg-primary-600 flex items-center justify-center text-white">
-                <Package className="w-4 h-4" />
-              </div>
-              <span>Parcel<span className="text-primary-600">Track</span></span>
-            </Link>
+      {/* ========================================================= */}
+      {/* RIGHT COLUMN: SHADCN ADMIN AUTH CARD                      */}
+      {/* High contrast, clean white card on rich slate surface     */}
+      {/* ========================================================= */}
+      <main className="lg:w-5/12 flex-1 flex items-center justify-center p-6 sm:p-10 lg:p-12 bg-slate-900/50 lg:bg-slate-950">
+        <div className="w-full max-w-md bg-white p-8 sm:p-10 rounded-3xl shadow-2xl border border-slate-200/90 text-slate-900">
+          {/* Mobile Top Brand & Parcel Locker Thumbnail */}
+          <div className="lg:hidden mb-6 space-y-3 pb-4 border-b border-slate-100">
+            <div className="flex items-center justify-between">
+              <Link to="/" className="flex items-center gap-2 font-black text-lg text-slate-900">
+                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
+                  <Package className="w-4 h-4" />
+                </div>
+                <span>Parcel<span className="text-indigo-600">Track</span></span>
+              </Link>
+              <Link to="/" className="text-xs font-bold text-indigo-600 hover:underline">
+                3D Unboxing →
+              </Link>
+            </div>
 
-            <div className="p-3 bg-primary-50 rounded-2xl border border-primary-200 flex items-center gap-3">
+            <div className="p-2.5 bg-indigo-50/70 rounded-2xl border border-indigo-100 flex items-center gap-3">
               <img
-                src={PARCEL_SHELVES_IMG}
-                alt="Parcel Shelves"
-                className="w-10 h-10 rounded-xl object-cover border border-primary-200 shrink-0"
+                src={parcelLockerImg}
+                alt="Parcel Locker"
+                className="w-12 h-12 rounded-xl object-cover border border-indigo-200 shrink-0 shadow-xs"
               />
-              <div>
-                <span className="text-[10px] uppercase font-bold text-primary-800 tracking-wider block">
-                  Hostel Parcel Reception & Handover
+              <div className="overflow-hidden">
+                <span className="text-[10px] uppercase font-bold text-indigo-800 tracking-wider block truncate">
+                  Hostel Parcel Locker System
                 </span>
-                <span className="text-xs text-slate-600">
+                <span className="text-xs font-semibold text-slate-700 block truncate">
                   Gate 1 Intake • Shelf Custody • OTP Pickup
                 </span>
               </div>
             </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-navy tracking-tight">{title}</h1>
-          <p className="mt-1 text-xs sm:text-sm text-slate-600">{subtitle}</p>
+          <div className="mb-6">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {title}
+            </h2>
+            <p className="mt-1.5 text-xs sm:text-sm text-slate-500 leading-normal">
+              {subtitle}
+            </p>
+          </div>
 
-          <div className="mt-6">{children}</div>
+          <div>{children}</div>
         </div>
       </main>
     </div>

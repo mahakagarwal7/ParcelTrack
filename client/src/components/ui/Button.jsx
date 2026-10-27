@@ -2,16 +2,24 @@ import React from 'react';
 import { Loader2 } from 'lucide-react';
 
 const variants = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700 shadow-soft',
-  secondary: 'bg-white text-navy border border-slate-200 hover:bg-slate-50',
-  success: 'bg-teal-600 text-white hover:bg-teal-700 shadow-soft',
-  danger: 'bg-rose-600 text-white hover:bg-rose-700 shadow-soft',
-  ghost: 'text-primary-700 hover:bg-primary-50',
+  primary: 'bg-indigo-600 text-white hover:bg-indigo-700 active:scale-[0.99] shadow-md shadow-indigo-600/20',
+  secondary: 'bg-white text-slate-800 border border-slate-200 hover:bg-slate-50',
+  success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md shadow-emerald-600/20',
+  danger: 'bg-rose-600 text-white hover:bg-rose-700 shadow-md shadow-rose-600/20',
+  ghost: 'text-indigo-600 hover:bg-indigo-50',
+};
+
+const variantStyles = {
+  primary: { backgroundColor: '#4f46e5', color: '#ffffff' },
+  secondary: { backgroundColor: '#ffffff', color: '#0f172a' },
+  success: { backgroundColor: '#059669', color: '#ffffff' },
+  danger: { backgroundColor: '#e11d48', color: '#ffffff' },
+  ghost: { backgroundColor: 'transparent', color: '#4f46e5' },
 };
 
 const sizes = {
-  sm: 'h-8 px-3 text-xs',
-  md: 'h-10 px-4 text-sm',
+  sm: 'h-9 px-3.5 text-xs',
+  md: 'h-11 px-4 text-sm',
   lg: 'h-12 px-6 text-base',
 };
 
@@ -22,17 +30,28 @@ export default function Button({
   disabled = false,
   icon: Icon,
   className = '',
+  style = {},
   children,
   ...props
 }) {
   return (
     <button
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
+      style={{ ...variantStyles[variant], ...style }}
+      className={`inline-flex items-center justify-center gap-2 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
-      {loading ? <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> : Icon && <Icon className="w-4 h-4" aria-hidden="true" />}
-      {children}
+      {loading ? (
+        <>
+          <Loader2 className="w-4 h-4 animate-spin text-white" aria-hidden="true" />
+          <span>Processing...</span>
+        </>
+      ) : (
+        <>
+          {Icon && <Icon className="w-4 h-4" aria-hidden="true" />}
+          {children}
+        </>
+      )}
     </button>
   );
 }
